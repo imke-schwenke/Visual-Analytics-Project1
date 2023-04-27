@@ -17,17 +17,23 @@
         onclick="window.open('https://visva.cs.uni-koeln.de', '_blank')"
         src="visva_sitelogo_no_white.png"
       />
+      <div class="title">
+        <h3>VA Project 1</h3>
+        <h8>by Linus Lange, Jieyu Fu, Freddy Schmeisser and Imke Schwenke</h8>
+      </div>
       <div class="buttons">
-        <button class="function_button" onclick="print_hello_world()">
-          Say "Hello world!"
+        <button class="function_button" onclick="draw()">
+          Change Visualization
         </button>
-        <button class="function_button" onclick="request_example_data()">
-          Get Data
-          </button >
       </div>
     </div>
-    <div class="content"></div>
+    <div class="content">
+    <div id="canvas">
+    </div>
+  </div>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="/socket.io/socket.io.js"></script >
     <script src="index.js"></script >
+     <script src="app.js"></script >
   </body>
 </html>

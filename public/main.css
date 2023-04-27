@@ -28,12 +28,19 @@ body {
   box-sizing: border-box;
 
   display: grid;
-  grid-template-areas: "logo buttons";
+  grid-template-areas: "logo title buttons";
   grid-template-columns: 250px auto;
 
   border-bottom: 2px solid white;
 }
 
+.title {
+  grid-area: title;
+  align-items: center;
+  color: white;
+  display: flex;
+  flex-direction:column;
+}
 /* Styling the logo */
 .logo {
   grid-area: logo;
