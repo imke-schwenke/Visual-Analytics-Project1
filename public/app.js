@@ -1,6 +1,6 @@
  // set the dimensions and margins of the graph
  var margin = {
- 		top: 10,
+ 		top: 150,
  		right: 30,
  		bottom: 30,
  		left: 60
@@ -8,9 +8,7 @@
  	width = 460 - margin.left - margin.right,
  	height = 400 - margin.top - margin.bottom;
 
- function draw() {
-
-
+ function drawFirstVis() {
  	// append the svg object to the body of the page
  	var svg = d3.select("#canvas")
  		.append("svg")
@@ -19,11 +17,15 @@
  		.append("g")
  		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+	//add Title, Subtitle and Axis Labels for Visualization
+	addTitle(svg, "Rating of Games with a Long Playtime over the Years");
+	addSubtitle(svg);
+	addAxisTitle(svg, "Years", "Average Rating") 
 
  	//Read the data
  	d3.json("/boardgames_40.json").then(function(data) {
  		data = processBoardGameData(data);
- 		//console.log(data);
+		data = temporalProcessing(data);
 
  		// scale x values
  		const x = ScaleX(data);
@@ -37,13 +39,7 @@
  		// create and append x Axis
  		getYAxis(svg, data);
 
- 		// format variables:
- 		// function(d){
- 		//     return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
- 		// },
-
-
- 		//Add the line
+ 		// Add the line
  		svg.append("path")
  			.datum(data)
  			.attr("fill", "none")
@@ -51,56 +47,94 @@
  			.attr("stroke-width", 1.5)
  			.attr("d", d3.line()
  				.x(function(d) {
- 					console.log(d.year)
  					return x(d.year)
  				})
  				.y(function(d) {
- 					console.log(d['rating']['rating']);
- 					return y(d['rating']['rating'])
+ 					return y(d.rating)
  				})
  			)
  	})
  }
 
+ // function for scaling x
  function ScaleX(data) {
  	var x = d3.scaleTime()
- 		.domain(d3.extent(data, function(d) {
- 			return d.year;
- 		}))
- 		.range([0, width + 200]);
+	 .domain(d3.extent(data, function(d) { return d.year; }))
+	 .range([ 0, width +400]);
 
  	return x
  }
 
+ // function for scaling y
  function ScaleY(data) {
  	var y = d3.scaleLinear()
  		.domain([0, d3.max(data, function(d) {
- 			return +d['rating']['rating']
+ 			return +d.rating
  		})])
- 		.range([height + 240, 0]);
+ 		.range([height + 380, 0]);
  	return y;
  }
 
+ // function for creating the x Axis
  function getXAxis(svg, data) {
-
- 	// Initialize the X axis
  	let x = ScaleX(data)
  	var xAxis = d3.axisBottom(x).tickFormat(d3.format("d"))
-
  	svg.append("g")
  		.attr("transform", `translate(0, 600)`)
  		.call(xAxis)
  }
 
+ // function for creating the y Axis
  function getYAxis(svg, data) {
-
- 	// Initialize the Y axis
  	let y = ScaleY(data)
  	var yAxis = d3.axisLeft(y)
-
  	svg.append("g")
  		.call(yAxis)
  }
+
+ // function for adding axis labels
+ function addAxisTitle(svg, xLabel, yLabel) {
+	// x Axis label
+    svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width +400)
+    .attr("y", height +425)
+    .text(xLabel);
+
+	// y Axis label
+	svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "end")
+    .attr("y", -35)
+    .attr("dy", ".75em")
+    .attr("transform", "rotate(-90)")
+    .text(yLabel);
+}
+
+// function for adding a title for the visualization in the svg
+function addTitle(svg, title){
+    const subtitle = document.createElement('h7');
+    subtitle.style.fontFamily = "inherit";
+    subtitle.style.textAlign = "left";
+    subtitle.textContent = "Imke Schwenke, 16. Januar 2023";
+    svg.append("text")
+		.attr("x", (width / 2))             
+		.attr("y", 0 - (margin.top / 2)+25)
+		.attr("text-anchor", "middle")  
+		.style("font-size", "16px") 
+		.style("text-decoration", "underline")  
+		.text(title);
+}
+
+// function for adding a subtitle for the visualization in the svg
+function addSubtitle(svg){
+	svg.append("text")
+        .attr("x", 100)
+        .attr("y",2*height+225)
+        .style("text-anchor", "middle")
+        .text("Cologne, May 2023");
+}
 
  function processBoardGameData(boardGames) {
  	boardGamesProcessed = {};
@@ -180,8 +214,8 @@
  		entry["avg_num_of_reviews"] = entry["avg_num_of_reviews"] + ((boardGame["rating"]["num_of_reviews"] - entry["avg_num_of_reviews"]) / entry["amountOfGames"]);
  	}
 
-
- 	return JSON.stringify(boardGamesProcessed);
+ 	//return JSON.stringify(boardGamesProcessed);
+	return boardGamesProcessed;
 
  }
 
@@ -204,3 +238,18 @@
  	years.sort();
  	return years;
  }
+
+ // function which continues the data processing for the line graph
+ function temporalProcessing(data){
+	result=[];
+	for (let i = 0; i < Object.keys(data).length; i++) {
+		if(Object.keys(Object.values(data)[i]) == 'long'){
+			let temp = Object.values(data)[i];
+			result.push({year:Object.keys(data)[i], rating: Object.values(temp)[0]['avg_rating']})
+		}
+	}
+	return result
+ }
+
+ // on init the first visualization is rendered
+ drawFirstVis();
