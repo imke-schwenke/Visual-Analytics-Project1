@@ -21,14 +21,18 @@
         <h3>VA Project 1</h3>
         <h8>by Linus Lange, Jieyu Fu, Frederik Schmeisser and Imke Schwenke</h8>
       </div>
-      <div class="buttons">
-        <button class="function_button">
-          Change Visualization
-        </button>
+      <div class="buttons" style="display: inline; align-items: center;">
+        <button class="tablinks" onclick="changeInfo(event, 'General')">Amount over the Years</button>
+        <button class="tablinks" onclick="changeInfo(event, 'Details')">Rating per Duration</button>
       </div>
     </div>
-    <div class="content">
-    <div id="canvas">
+    <div id="General" class="tabcontent">
+      <div id="canvas">
+      </div>
+    </div>
+    <div id="Details" class="tabcontent" style="display: none;">
+      <div id="canvas2">
+      </div>
     </div>
   </div>
     <script src="https://d3js.org/d3.v7.min.js"></script>

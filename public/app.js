@@ -329,7 +329,117 @@ function shortTemporalProcessing(data){
 		}
 	}
 	return result
- }
+}
 
- // on init the first visualization is rendered
- drawFirstVis();
+// function which continues the data processing for the line graph for short games
+function ratingProcessing(data){
+	rating_long = 0;
+	rating_medium = 0;
+	rating_short = 0;
+	for (let i = 0; i < Object.keys(data).length; i++) {
+		for(let j = 0; j < Object.keys(Object.values(data)[i]).length; j++){
+			if(Object.keys(Object.values(data)[i])[j] == 'long'){
+				let temp = Object.values(data)[i]['long'];
+				rating_long += temp['avg_rating'];
+			}
+			if(Object.keys(Object.values(data)[i])[j] == 'medium'){
+				let temp = Object.values(data)[i]['medium'];
+				rating_medium += temp['avg_rating'];
+			}
+			if(Object.keys(Object.values(data)[i])[j] == 'short'){
+				let temp = Object.values(data)[i]['short'];
+				rating_short += temp['avg_rating'];
+			}
+
+		}
+	}
+	result = [{duration: 'Long Duration', rating: rating_long},
+				{duration: 'Medium Duration', rating: rating_medium},
+				{duration: 'Short Duration', rating: rating_short}]
+	return result
+}
+
+ function drawSecondVis(){
+  	// append the svg object to the body of the page
+ 	var svg = d3.select("#canvas2")
+	 .append("svg")
+	 .attr("width", width + margin.left + margin.right)
+	 .attr("height", height + margin.top + margin.bottom)
+	 .append("g")
+	 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	//add Title, Subtitle and Axis Labels for Visualization
+	addTitle(svg, "Average Rating per Duration");
+	addSubtitle(svg);
+	addAxisTitle(svg, "Rating", "Duration");
+
+	//Read the data
+	 d3.json("/boardgames_40.json").then(function(data) {
+		data = processBoardGameData(data);
+		data = ratingProcessing(data)
+   
+		// scale x values
+		//var subgroups = Object.keys(data[0]).slice(0)
+		const x2 = d3.scaleBand()
+			.range([ 0, width +400])
+			.domain(data.map(function(d) { return d.duration; }))
+	 			
+		// create and append x Axis
+		var xAxis = d3.axisBottom(x2)
+		svg.append("g")
+			.attr("transform", `translate(0, 600)`)
+			.call(xAxis);
+   
+		// scale y values
+		var y = d3.scaleLinear()
+ 			.domain([0, d3.max(data, function(d) {return d.rating; })])
+ 			.range([height + 380, 0]);
+   
+		// create and append y Axis
+		var yAxis = d3.axisLeft(y)
+ 			svg.append("g")
+ 				.call(yAxis)
+   
+		getLegend(svg, ['Short Games','Medium Games','Long Games'], ['green','red','steelblue']);
+
+		var color = d3.scaleOrdinal()
+		 .domain(data.map(function(d) { return d.duration; }))
+		 .range(['steelblue', 'red','green'])
+		
+		// Bars
+		svg.selectAll("mybar")
+			.data(data)
+			.enter()
+			.append("rect")
+  			.attr("x", function(d) { return x2(d.duration)+25; })
+  			.attr("y", function(d) { return y(d.rating); })
+  			.attr("width", x2.bandwidth()-50)
+  			.attr("height", function(d) { return y(0)-y(d.rating); })
+			.attr("fill", function (d) { return color(d.duration); })
+
+	})	
+}
+
+drawFirstVis();
+drawSecondVis();
+
+function changeInfo(evt, info) {
+    // Declare all variables
+    var i, tabcontent, tablinks;
+
+    // Get all elements with class="tabcontent" and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the button that opened the tab
+    document.getElementById(info).style.display = "block";
+    evt.currentTarget.className += " active";
+}
