@@ -353,9 +353,9 @@ function ratingProcessing(data){
 
 		}
 	}
-	result = [{duration: 'Long Duration', rating: rating_long},
+	result = [{duration: 'Short Duration', rating: rating_short},
 				{duration: 'Medium Duration', rating: rating_medium},
-				{duration: 'Short Duration', rating: rating_short}]
+				{duration: 'Long Duration', rating: rating_long}]
 	return result
 }
 
@@ -404,7 +404,7 @@ function ratingProcessing(data){
 
 		var color = d3.scaleOrdinal()
 		 .domain(data.map(function(d) { return d.duration; }))
-		 .range(['steelblue', 'red','green'])
+		 .range(['green', 'red','steelblue'])
 		
 		// Bars
 		svg.selectAll("mybar")
