@@ -41,7 +41,7 @@
  		// create and append x Axis
  		getYAxis(svg, data_long);
 
-		getLegend(svg, ['Short Games','Medium Games','Long Games'], ['green','red','steelblue']);
+		getLegend(svg, ['Short Games (0-60min)','Medium Games (61-90min)','Long Games (>90min)'], ['green','red','steelblue']);
 
  		// Add the line
  		svg.append("path")
@@ -331,31 +331,38 @@ function shortTemporalProcessing(data){
 	return result
 }
 
-// function which continues the data processing for the line graph for short games
+// function which continues the data processing for the line graph
 function ratingProcessing(data){
 	rating_long = 0;
 	rating_medium = 0;
 	rating_short = 0;
+	index_long = 0;
+	index_medium = 0;
+	index_short = 0;
+
 	for (let i = 0; i < Object.keys(data).length; i++) {
 		for(let j = 0; j < Object.keys(Object.values(data)[i]).length; j++){
 			if(Object.keys(Object.values(data)[i])[j] == 'long'){
 				let temp = Object.values(data)[i]['long'];
 				rating_long += temp['avg_rating'];
+				index_long++;
 			}
 			if(Object.keys(Object.values(data)[i])[j] == 'medium'){
 				let temp = Object.values(data)[i]['medium'];
 				rating_medium += temp['avg_rating'];
+				index_medium++;
 			}
 			if(Object.keys(Object.values(data)[i])[j] == 'short'){
 				let temp = Object.values(data)[i]['short'];
 				rating_short += temp['avg_rating'];
+				index_short++;
 			}
 
 		}
 	}
-	result = [{duration: 'Short Duration', rating: rating_short},
-				{duration: 'Medium Duration', rating: rating_medium},
-				{duration: 'Long Duration', rating: rating_long}]
+	result = [{duration: 'Short Duration', rating: rating_short / index_short},
+				{duration: 'Medium Duration', rating: rating_medium / index_medium},
+				{duration: 'Long Duration', rating: rating_long / index_long}]
 	return result
 }
 
@@ -400,7 +407,7 @@ function ratingProcessing(data){
  			svg.append("g")
  				.call(yAxis)
    
-		getLegend(svg, ['Short Games','Medium Games','Long Games'], ['green','red','steelblue']);
+		getLegend(svg, ['Short Games (0-60min)','Medium Games (61-90min)','Long Games (>90min)'], ['green','red','steelblue']);
 
 		var color = d3.scaleOrdinal()
 		 .domain(data.map(function(d) { return d.duration; }))
