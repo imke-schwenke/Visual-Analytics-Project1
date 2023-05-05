@@ -371,7 +371,7 @@ function ratingProcessing(data){
 	//add Title, Subtitle and Axis Labels for Visualization
 	addTitle(svg, "Average Rating per Duration");
 	addSubtitle(svg);
-	addAxisTitle(svg, "Rating", "Duration");
+	addAxisTitle(svg, "Duration", "Rating");
 
 	//Read the data
 	 d3.json("/boardgames_40.json").then(function(data) {
