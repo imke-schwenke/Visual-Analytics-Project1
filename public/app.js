@@ -57,6 +57,7 @@
  					return y(d.amount)
  				})
  			)
+			
 		// Add the line
 		svg.append("path")
 		.datum(data_medium)
@@ -423,6 +424,16 @@ function ratingProcessing(data){
   			.attr("width", x2.bandwidth()-50)
   			.attr("height", function(d) { return y(0)-y(d.rating); })
 			.attr("fill", function (d) { return color(d.duration); })
+
+		svg.selectAll("mybar")
+			.data(data)
+			.enter()
+			.append("text")
+			.attr("x", function(d) { return x2(d.duration) + 35; })
+			.attr("y", function(d) { return y(d.rating) +25 ; })
+        	.attr('width', 20)
+        	.style("font-size", "20px")
+        	.text(function (d) { return d.rating.toFixed(2)})
 
 	})	
 }
