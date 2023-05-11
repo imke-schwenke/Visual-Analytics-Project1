@@ -1,43 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VA Exercise 1</title>
-    <link rel="icon" type="image/x-icon" href="visva_sitelogo_no_white.png" />
-    <link href="main.css" rel="stylesheet" />
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-  </head>
-  <body>
-    <div class="header">
-      <img
-        class="logo"
-        id="logo"
-        onclick="window.open('https://visva.cs.uni-koeln.de', '_blank')"
-        src="visva_sitelogo_no_white.png"
-      />
-      <div class="title">
-        <h3>VA Project 1</h3>
-        <h8>by Linus Lange, Jieyu Fu, Frederik Schmeisser and Imke Schwenke</h8>
-      </div>
-      <div class="buttons" style="display: inline; align-items: center;">
-        <button class="tablinks" onclick="changeInfo(event, 'General')">Amount over the Years</button>
-        <button class="tablinks" onclick="changeInfo(event, 'Details')">Rating per Duration</button>
-      </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VA Exercise 1</title>
+  <link rel="icon" type="image/x-icon" href="visva_sitelogo_no_white.png" />
+  <link href="main.css" rel="stylesheet" />
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+
+<body>
+  <div class="header">
+    <img class="logo" id="logo" onclick="window.open('https://visva.cs.uni-koeln.de', '_blank')"
+      src="visva_sitelogo_no_white.png" />
+    <div class="title">
+      <h3>VA Project 1</h3>
+      <h8>by Linus Lange, Jieyu Fu, Frederik Schmeisser and Imke Schwenke</h8>
     </div>
-    <div id="General" class="tabcontent">
-      <div id="canvas">
-      </div>
-    </div>
-    <div id="Details" class="tabcontent" style="display: none;">
-      <div id="canvas2">
-      </div>
+
+
+    <div class="buttons" style="display: inline; align-items: center;">
+      <button class="tablinks" onclick="changeInfo(event, 'General')">Amount over the Years</button>
+      <button class="tablinks" onclick="changeInfo(event, 'Details')">Rating per Duration</button>
     </div>
   </div>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script >
-    <script src="index.js"></script >
-     <script src="app.js"></script >
-  </body>
+
+  <div id="legend">
+    <input type="checkbox" id="cbShort" onclick="drawFirstVis();"> Short Games (0-60min)  </input> </br>
+    <input type="checkbox" id="cbMedium" onclick="drawFirstVis();"> Medium Games (61-90min) </input> </br>
+    <input type="checkbox" id="cbLong" onclick="drawFirstVis();"> Long Games (>90min) </input> </br>
+  </div>
+
+  <script>
+    window.onload = onPageLoad();
+
+    function onPageLoad() {
+      document.getElementById("cbShort").checked = true;
+      document.getElementById("cbMedium").checked = true;
+      document.getElementById("cbLong").checked = true;
+    }
+  </script>
+
+<!-- Canvas for first vis -->
+  <div id="General" class="tabcontent">
+    <div id="canvas">
+    </div>
+  </div>
+
+
+
+<!-- Canvas for second vis -->
+  <div id="Details" class="tabcontent" style="display: none;">
+    <div id="canvas2">
+    </div>
+  </div>
+  </div>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="index.js"></script>
+
+  <!-- draw vis -->
+  <script src="app.js"></script>
+</body>
+
 </html>

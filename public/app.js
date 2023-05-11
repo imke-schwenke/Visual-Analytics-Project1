@@ -9,6 +9,8 @@
  	height = 400 - margin.top - margin.bottom;
 
  function drawFirstVis() {
+	d3.select("svg").remove();
+
  	// append the svg object to the body of the page
  	var svg = d3.select("#canvas")
  		.append("svg")
@@ -16,6 +18,8 @@
  		.attr("height", height + margin.top + margin.bottom)
  		.append("g")
  		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		
 
 	//add Title, Subtitle and Axis Labels for Visualization
 	addTitle(svg, "Amount of published Games over the Years");
@@ -41,28 +45,32 @@
  		// create and append x Axis
  		getYAxis(svg, data_long);
 
-		getLegend(svg, ['Short Games (0-60min)','Medium Games (61-90min)','Long Games (>90min)'], ['green','red','steelblue']);
+		// getLegend(svg, ['Short Games (0-60min)','Medium Games (61-90min)','Long Games (>90min)'], ['green','red','steelblue']);
 
- 		// Add the line
- 		svg.append("path")
- 			.datum(data_short)
- 			.attr("fill", "none")
- 			.attr("stroke", "green")
- 			.attr("stroke-width", 1.5)
- 			.attr("d", d3.line()
- 				.x(function(d) {
- 					return x(d.year)
- 				})
- 				.y(function(d) {
- 					return y(d.amount)
- 				})
- 			)
-			
-		// Add the line
+		if(document.getElementById("cbShort").checked){
+			// Add the line short
+			svg.append("path")
+			.datum(data_short)
+			.attr("fill", "none")
+			.attr("stroke", "rgb(160, 213, 104)")
+			.attr("stroke-width", 1.5)
+			.attr("d", d3.line()
+				.x(function(d) {
+					return x(d.year)
+				})
+				.y(function(d) {
+					return y(d.amount)
+				})
+			)
+		}
+
+ 		
+		if(document.getElementById("cbMedium").checked){
+			// Add the line medium
 		svg.append("path")
 		.datum(data_medium)
 		.attr("fill", "none")
-		.attr("stroke", "red")
+		.attr("stroke", "rgb(79, 193, 232)")
 		.attr("stroke-width", 1.5)
 		.attr("d", d3.line()
 			.x(function(d) {
@@ -72,12 +80,14 @@
 				return y(d.amount)
 			})
 		)
-
-		// Add the line
+		}	
+		
+		if(document.getElementById("cbLong").checked){
+			// Add the line long
 		svg.append("path")
 		.datum(data_long)
 		.attr("fill", "none")
-		.attr("stroke", "steelblue")
+		.attr("stroke", "rgb(237, 85, 100)")
 		.attr("stroke-width", 1.5)
 		.attr("d", d3.line()
 			.x(function(d) {
@@ -87,6 +97,8 @@
 				return y(d.amount)
 			})
 		)
+		}
+		
  	})
  }
 
@@ -148,10 +160,12 @@
 
 // function for appending legend
 function getLegend(svg, textArray, colorArray){
+	
 	for (let i = 0; i< textArray.length; i++){
 		svg.append("circle").attr("cx",2*width+100).attr("cy",130+i*30).attr("r", 6).style("fill", colorArray[i])
 		svg.append("text").attr("x", 2*width+120).attr("y", 130+ i*30).text(textArray[i]).style("font-size", "15px").attr("alignment-baseline","middle")
-	}	
+	}
+	
 }
 
 // function for adding a title for the visualization in the svg
@@ -361,13 +375,13 @@ function ratingProcessing(data){
 
 		}
 	}
-	result = [{duration: 'Short Duration', rating: rating_short / index_short},
-				{duration: 'Medium Duration', rating: rating_medium / index_medium},
-				{duration: 'Long Duration', rating: rating_long / index_long}]
+	result = [{duration: 'Short Duration (0-60min)', rating: rating_short / index_short},
+				{duration: 'Medium Duration (61-90min)', rating: rating_medium / index_medium},
+				{duration: 'Long Duration (>90min)', rating: rating_long / index_long}]
 	return result
 }
 
- function drawSecondVis(){
+function drawSecondVis(){
   	// append the svg object to the body of the page
  	var svg = d3.select("#canvas2")
 	 .append("svg")
@@ -408,11 +422,11 @@ function ratingProcessing(data){
  			svg.append("g")
  				.call(yAxis)
    
-		getLegend(svg, ['Short Games (0-60min)','Medium Games (61-90min)','Long Games (>90min)'], ['green','red','steelblue']);
+		// getLegend(svg, ['Short Games (0-60min)','Medium Games (61-90min)','Long Games (>90min)'], ['green','red','steelblue']);
 
 		var color = d3.scaleOrdinal()
 		 .domain(data.map(function(d) { return d.duration; }))
-		 .range(['green', 'red','steelblue'])
+		 .range(['rgb(160, 213, 104)', 'rgb(79, 193, 232)','rgb(237, 85, 100)'])
 		
 		// Bars
 		svg.selectAll("mybar")
@@ -438,9 +452,11 @@ function ratingProcessing(data){
 	})	
 }
 
+// draw visualizations
 drawFirstVis();
 drawSecondVis();
 
+// switch canvas
 function changeInfo(evt, info) {
     // Declare all variables
     var i, tabcontent, tablinks;
@@ -460,4 +476,27 @@ function changeInfo(evt, info) {
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(info).style.display = "block";
     evt.currentTarget.className += " active";
+
+	if(info == "Details"){
+		document.getElementById("cbShort").checked = true;
+      document.getElementById("cbMedium").checked = true;
+      document.getElementById("cbLong").checked = true;
+
+	  document.getElementById("legend").style.visibility = "hidden";
+	} else {
+		document.getElementById("cbShort").disabled = false;
+      document.getElementById("cbMedium").disabled = false;
+      document.getElementById("cbLong").disabled = false;
+
+	  document.getElementById("legend").style.visibility = "visible";
+
+	}
+
+	
+
+	  // draw visualizations
+drawFirstVis();
+drawSecondVis();
 }
+
+

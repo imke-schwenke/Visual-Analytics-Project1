@@ -79,3 +79,24 @@ body {
   color: white;
   border-color: white;
 }
+
+#legend {
+  position: fixed;
+  right: 270px;
+  top: 380px;
+  width: 200px;
+}
+
+#cbShort {
+  accent-color :rgb(160, 213, 104);
+}
+#cbMedium {
+  accent-color: rgb(79, 193, 232);
+}
+#cbLong {
+  accent-color: rgb(237, 85, 100);
+}
+
+#text1 {
+  background-color: purple;
+}
