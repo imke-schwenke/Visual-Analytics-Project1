@@ -395,8 +395,6 @@ function drawSecondVis() {
 
 	//add Title, Subtitle and Axis Labels for Visualization
 	addTitle(svg, "Average Rating per Duration");
-	addSubtitle(svg);
-	addAxisTitle(svg, "Duration", "Rating");
 
 	//Read the data
 	d3.json("/boardgames_40.json").then(function (data) {
@@ -409,7 +407,7 @@ function drawSecondVis() {
 			.range([0, width + 400])
 			.domain(data.map(function (d) { return d.duration; }))
 
-	
+
 
 
 		// scale y values
@@ -457,7 +455,11 @@ function drawSecondVis() {
 			.attr("height", 200)
 			.attr("fill", "white")
 
-				// create and append x Axis
+		addSubtitle(svg);
+		addAxisTitle(svg, "Duration", "Rating");
+
+
+		// create and append x Axis
 		var xAxis = d3.axisBottom(x2)
 		svg.append("g")
 			.attr("transform", `translate(0, 600)`)
@@ -502,7 +504,7 @@ function changeInfo(evt, info) {
 		document.getElementById("cbShort").checked = true;
 		document.getElementById("cbMedium").checked = true;
 		document.getElementById("cbLong").checked = true;
-		
+
 
 		document.getElementById("legend").style.visibility = "visible";
 		document.getElementById("zoomButtons").style.visibility = "hidden";
@@ -522,7 +524,7 @@ function updateScale(zoomType) {
 		if (yScaleLowerBounds > 0) {
 			yScaleLowerBounds--;
 		}
-	} 
+	}
 	if (zoomType == 1) {
 		if (yScaleLowerBounds < 8) {
 			yScaleLowerBounds++;
@@ -539,11 +541,11 @@ function updateScale(zoomType) {
 function updateVisualization(vis) {
 	d3.select("svg").remove();
 
-	if(vis == 1){
+	if (vis == 1) {
 		drawFirstVis();
 
 	}
-	if(vis == 2){
+	if (vis == 2) {
 		drawSecondVis();
 
 	}

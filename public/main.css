@@ -39,8 +39,9 @@ body {
   align-items: center;
   color: white;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
 }
+
 /* Styling the logo */
 .logo {
   grid-area: logo;
@@ -80,7 +81,8 @@ body {
   border-color: white;
 }
 
-#legend, #zoomButtons {
+#legend,
+#zoomButtons {
   position: fixed;
   right: 270px;
   top: 380px;
@@ -88,11 +90,13 @@ body {
 }
 
 #cbShort {
-  accent-color :rgb(160, 213, 104);
+  accent-color: rgb(160, 213, 104);
 }
+
 #cbMedium {
   accent-color: rgb(79, 193, 232);
 }
+
 #cbLong {
   accent-color: rgb(237, 85, 100);
 }
