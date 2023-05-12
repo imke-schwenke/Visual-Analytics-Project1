@@ -80,7 +80,7 @@ body {
   border-color: white;
 }
 
-#legend {
+#legend, #zoomButtons {
   position: fixed;
   right: 270px;
   top: 380px;

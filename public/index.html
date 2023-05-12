@@ -28,9 +28,18 @@
   </div>
 
   <div id="legend">
-    <input type="checkbox" id="cbShort" onclick="drawFirstVis();"> Short Games (0-60min)  </input> </br>
-    <input type="checkbox" id="cbMedium" onclick="drawFirstVis();"> Medium Games (61-90min) </input> </br>
-    <input type="checkbox" id="cbLong" onclick="drawFirstVis();"> Long Games (>90min) </input> </br>
+    <input type="checkbox" id="cbShort" onclick="updateVisualization(1);"> Short Games (0-60min)  </input> </br>
+    <input type="checkbox" id="cbMedium" onclick="updateVisualization(1);"> Medium Games (61-90min) </input> </br>
+    <input type="checkbox" id="cbLong" onclick="updateVisualization(1);"> Long Games (>90min) </input> </br>
+  </div>
+
+  
+
+  <div id="zoomButtons"> 
+    Zoom:
+    <input type="text" id="zoomText" name="zoomText" value="0/8" readonly>
+    <button id="zoom+" onclick="updateScale(1)"> + </button>
+    <button id="zoom-" onclick="updateScale(-1)"> - </button>
   </div>
 
   <script>
@@ -40,6 +49,8 @@
       document.getElementById("cbShort").checked = true;
       document.getElementById("cbMedium").checked = true;
       document.getElementById("cbLong").checked = true;
+      document.getElementById("zoomButtons").style.visibility = "hidden";
+
     }
   </script>
 
