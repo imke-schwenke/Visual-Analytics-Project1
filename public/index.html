@@ -9,6 +9,7 @@
   <link rel="icon" type="image/x-icon" href="visva_sitelogo_no_white.png" />
   <link href="main.css" rel="stylesheet" />
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/@saehrimnir/druidjs"></script>
 </head>
 
 <body>
@@ -24,6 +25,7 @@
     <div class="buttons" style="display: inline; align-items: center;">
       <button class="tablinks" onclick="changeInfo(event, 'General')">Amount over the Years</button>
       <button class="tablinks" onclick="changeInfo(event, 'Details')">Rating per Duration</button>
+      <button class="tablinks" onclick="changeInfo(event, 'Details2')">Get LDA</button>
     </div>
   </div>
 
@@ -60,17 +62,23 @@
     </div>
   </div>
 
-
-
   <!-- Canvas for second vis -->
   <div id="Details" class="tabcontent" style="display: none;">
     <div id="canvas2">
     </div>
   </div>
+
+  <!-- Canvas for LDA -->
+  <div id="Details2" class="tabcontent" style="display: none;">
+    <div id="canvas3">
+    </div>
+  </div>
   </div>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
+  <!--<script src="LDA.js"></script>-->
   <script src="index.js"></script>
+  
 
   <!-- draw vis -->
   <script src="app.js"></script>

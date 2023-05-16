@@ -1,3 +1,4 @@
+
 var yScaleLowerBounds = 0; // 0-8.16
 var lowerOverlap = 0;
 
@@ -468,9 +469,98 @@ function drawSecondVis() {
 	})
 }
 
+function LDA(){
+
+	// append the svg object to the body of the page
+    var svg = d3.select("#canvas3")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	//reading in the data
+	d3.json("boardgames_100.json").then(function(data) {
+		
+		// data processing
+		data = preprocessLDAData(data)
+		var top_25 = data.slice(0,25)
+		var top_100 = data.slice(25,100)
+
+		// Add X axis
+		var x = d3.scaleLinear()
+		.domain([0, d3.max(data, function(d) {
+		  return d.x
+		  })])
+		.range([ 0, width +400]);
+		svg.append("g")
+		.attr("transform", `translate(0, 600)`)
+		.call(d3.axisBottom(x));
+	
+		// Add Y axis
+		var y = d3.scaleLinear()
+		
+		  .domain([d3.min(data, function(d) {
+			return d.y
+			}), d3.max(data, function(d) {
+			return d.y
+			})])
+		.range([ height+ 380, 0]);
+		svg.append("g")
+		.call(d3.axisLeft(y));
+		// Add dots
+		svg.append('g')
+		.selectAll("dot")
+		.data(top_25)
+		.enter()
+		.append("circle")
+		.attr("cx", function (d) { return x(d.x); } )
+		.attr("cy", function (d) { return y(d.y); } )
+		.attr("r", 3)
+		.style("fill", "red")
+		// Add dots
+		svg.append('g')
+		.selectAll("dot")
+		.data(top_100)
+		.enter()
+		.append("circle")
+		.attr("cx", function (d) { return x(d.x); } )
+		.attr("cy", function (d) { return y(d.y); } )
+		.attr("r", 3)
+		.style("fill", "green")
+	})
+		
+}
+
+  function preprocessLDAData(data){
+		var matrix = data.map(a => [a.minage, a.minplaytime, a.minplayers])
+	  	var classes = []
+	  	var counter = 0
+	  	while(counter < 25){
+			classes.push('Top 25')
+			counter +=1
+	  	}
+	  	while(counter < 100){
+			classes.push('Top 100')
+			counter +=1
+	  	}
+		const X = druid.Matrix.from(matrix); // X is the data as object of the Matrix class.
+		const reductionLDA = new druid.LDA(X,{ labels: classes, d: 2 }) //2 dimensions, can use more.
+		const result = reductionLDA.transform()
+		var result_array = result.to2dArray;
+		result_array = result_array.map(a => [a[0],a[1]])
+		var obj_result= [];
+		for(var i=0; i<result_array.length; i++){
+			obj_result.push({x: result_array[i][0],y: result_array[i][1]})
+		}
+		return obj_result
+  }
+
+
 // draw visualizations
 drawFirstVis();
 drawSecondVis();
+LDA();
 
 // switch canvas
 function changeInfo(evt, info) {
@@ -500,6 +590,12 @@ function changeInfo(evt, info) {
 
 		updateVisualization(2);
 
+	} else if (info == "Details2"){
+
+		document.getElementById("legend").style.visibility = "hidden";
+		document.getElementById("zoomButtons").style.visibility = "hidden";
+
+		updateVisualization(3);
 	} else {
 		document.getElementById("cbShort").checked = true;
 		document.getElementById("cbMedium").checked = true;
@@ -547,6 +643,9 @@ function updateVisualization(vis) {
 	}
 	if (vis == 2) {
 		drawSecondVis();
+
+	}if (vis == 3) {
+		LDA();
 
 	}
 }
