@@ -479,6 +479,16 @@ function LDA(){
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+	  //add Title, Subtitle and Axis Labels for Visualization
+	addTitle(svg, "LDA for the Top 25 Games and Top 100 Games");
+	svg.append("text")
+		.attr("text-anchor", "end")
+		.attr("x", width + 400)
+		.attr("y", height + 425)
+		.text("Used Dimesions: minplaytime, maxplayers, minage");
+	addSubtitle(svg);
+	getLegend(svg, ["Top 25 Games", "Top 100 Games"], ["blue","orange"])
+
 	//reading in the data
 	d3.json("boardgames_100.json").then(function(data) {
 		
@@ -494,7 +504,7 @@ function LDA(){
 		  })])
 		.range([ 0, width +400]);
 		svg.append("g")
-		.attr("transform", `translate(0, 600)`)
+		.attr("transform", `translate(0, 0)`)
 		.call(d3.axisBottom(x));
 	
 		// Add Y axis
@@ -502,9 +512,7 @@ function LDA(){
 		
 		  .domain([d3.min(data, function(d) {
 			return d.y
-			}), d3.max(data, function(d) {
-			return d.y
-			})])
+			}), 0])
 		.range([ height+ 380, 0]);
 		svg.append("g")
 		.call(d3.axisLeft(y));
@@ -517,7 +525,7 @@ function LDA(){
 		.attr("cx", function (d) { return x(d.x); } )
 		.attr("cy", function (d) { return y(d.y); } )
 		.attr("r", 3)
-		.style("fill", "red")
+		.style("fill", "blue")
 		// Add dots
 		svg.append('g')
 		.selectAll("dot")
@@ -527,13 +535,13 @@ function LDA(){
 		.attr("cx", function (d) { return x(d.x); } )
 		.attr("cy", function (d) { return y(d.y); } )
 		.attr("r", 3)
-		.style("fill", "green")
+		.style("fill", "orange")
 	})
 		
 }
 
   function preprocessLDAData(data){
-		var matrix = data.map(a => [a.minage, a.minplaytime, a.minplayers])
+		var matrix = data.map(a => [a.minplaytime, a.maxplayers, a.minage])
 	  	var classes = []
 	  	var counter = 0
 	  	while(counter < 25){
