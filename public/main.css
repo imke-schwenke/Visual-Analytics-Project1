@@ -90,15 +90,15 @@ body {
 }
 
 #cbShort {
-  accent-color: rgb(160, 213, 104);
+  accent-color:#FFC107;
 }
 
 #cbMedium {
-  accent-color: rgb(79, 193, 232);
+  accent-color: #1E88E5;
 }
 
 #cbLong {
-  accent-color: rgb(237, 85, 100);
+  accent-color: #D81B60;
 }
 
 #text1 {

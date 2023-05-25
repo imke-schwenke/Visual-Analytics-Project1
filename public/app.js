@@ -79,7 +79,7 @@ function drawFirstVis() {
 			svg.append("path")
 				.datum(data_short)
 				.attr("fill", "none")
-				.attr("stroke", "rgb(160, 213, 104)")
+				.attr("stroke", "#FFC107")
 				.attr("stroke-width", 1.5)
 				.attr("d", d3.line()
 					.x(function (d) {
@@ -97,7 +97,7 @@ function drawFirstVis() {
 			svg.append("path")
 				.datum(data_medium)
 				.attr("fill", "none")
-				.attr("stroke", "rgb(79, 193, 232)")
+				.attr("stroke", "#1E88E5")
 				.attr("stroke-width", 1.5)
 				.attr("d", d3.line()
 					.x(function (d) {
@@ -114,7 +114,7 @@ function drawFirstVis() {
 			svg.append("path")
 				.datum(data_long)
 				.attr("fill", "none")
-				.attr("stroke", "rgb(237, 85, 100)")
+				.attr("stroke", "#D81B60")
 				.attr("stroke-width", 1.5)
 				.attr("d", d3.line()
 					.x(function (d) {
@@ -449,7 +449,7 @@ function drawSecondVis() {
 
 		var color = d3.scaleOrdinal()
 			.domain(data.map(function (d) { return d.duration; }))
-			.range(['rgb(160, 213, 104)', 'rgb(79, 193, 232)', 'rgb(237, 85, 100)'])
+			.range(['#FFC107', '#1E88E5','#D81B60' ])
 
 		// Bars
 		svg.selectAll("mybar")
@@ -511,7 +511,7 @@ function LDA(){
 		.attr("y", height + 425)
 		.text("Used Dimesions: minplaytime, maxplayers, minage");
 	addSubtitle(svg);
-	getLegend(svg, ["Top 25 Games", "Top 100 Games"], ["blue","orange"])
+	getLegend(svg, ["Top 25 Games", "Top 100 Games"], ["#D81B60","#FFC107"])
 
 	//reading in the data
 	d3.json("boardgames_100.json").then(function(data) {
@@ -549,7 +549,7 @@ function LDA(){
 		.attr("cx", function (d) { return x(d.x); } )
 		.attr("cy", function (d) { return y(d.y); } )
 		.attr("r", 3)
-		.style("fill", "blue")
+		.style("fill", "#D81B60")
 		// Add dots
 		svg.append('g')
 		.selectAll("dot")
@@ -559,7 +559,7 @@ function LDA(){
 		.attr("cx", function (d) { return x(d.x); } )
 		.attr("cy", function (d) { return y(d.y); } )
 		.attr("r", 3)
-		.style("fill", "orange")
+		.style("fill", "#FFC107")
 	})
 		
 }
