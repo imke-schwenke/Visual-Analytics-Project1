@@ -697,14 +697,14 @@ function changeInfo(evt, info) {
 	document.getElementById(info).style.display = "block";
 	evt.currentTarget.className += " active";
 
-	if (info == "Details" || info == "Details3") {
+	if (info == "Details") {
 
 		document.getElementById("legend").style.visibility = "hidden";
 		document.getElementById("zoomButtons").style.visibility = "visible";
 
 		updateVisualization(2);
 
-	} else if (info == "Details2"){
+	} else if (info == "Details2" || info == "Details3"){
 
 		document.getElementById("legend").style.visibility = "hidden";
 		document.getElementById("zoomButtons").style.visibility = "hidden";
