@@ -23,7 +23,6 @@ function drawFirstVis() {
 		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
-
 	//add Title, Subtitle and Axis Labels for Visualization
 	addTitle(svg, "Amount of published Games over the Years");
 	addSubtitle(svg);
@@ -36,17 +35,42 @@ function drawFirstVis() {
 		data_medium = mediumTemporalProcessing(data);
 		data_short = shortTemporalProcessing(data);
 
-		// scale x values
-		const x = ScaleX(data_long);
+		var shortIsChecked = document.getElementById("cbShort").checked;
+		var mediumIsChecked = document.getElementById("cbMedium").checked;
+		var longIsChecked = document.getElementById("cbLong").checked;
 
+		if(longIsChecked){
+		// scale x values
+		var x = ScaleX(data_long);
 		// create and append x Axis
 		getXAxis(svg, data_long);
-
 		// scale y values
-		const y = ScaleY(data_long);
-
+		var y = ScaleY(data_long);
 		// create and append x Axis
 		getYAxis(svg, data_long);
+		}
+		else if(mediumIsChecked){
+		// scale x values
+		var x = ScaleX(data_medium);
+		// create and append x Axis
+		getXAxis(svg, data_medium);
+		// scale y values
+		var y = ScaleY(data_medium);
+		// create and append x Axis
+		getYAxis(svg, data_medium);
+		}
+		else{
+		// scale x values
+		var x = ScaleX(data_short);
+		// create and append x Axis
+		getXAxis(svg, data_short);
+		// scale y values
+		var y = ScaleY(data_short);
+		// create and append x Axis
+		getYAxis(svg, data_short);
+		}
+		
+
 
 		// getLegend(svg, ['Short Games (0-60min)','Medium Games (61-90min)','Long Games (>90min)'], ['green','red','steelblue']);
 
