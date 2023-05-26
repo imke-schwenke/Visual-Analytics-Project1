@@ -492,7 +492,88 @@ function drawSecondVis() {
 
 	})
 }
+function drawClusterVis(){
 
+	// append the svg object to the body of the page
+	var svg = d3.select("#canvas4")
+	  .append("svg")
+	  .attr("width", width + margin.left + margin.right)
+	  .attr("height", height + margin.top + margin.bottom)
+	  .append("g")
+	  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  	addTitle(svg, "Clustering of Gamest for min-, and max playtime");
+	//reading in the data
+	d3.json("boardgames_100.json").then(function(data) {
+		data = preprocessClusters(data, 3);
+		console.log(data);
+	
+  
+	    var x = d3.scaleLinear()
+	// for normalized values
+   // .domain([0, 1])
+	    // for non noramlized values
+	.domain([0, 180])
+    .range([ 0, width ]);
+ 	svg.append("g")
+    	.attr("transform", "translate(0," + height + ")")
+    	.call(d3.axisBottom(x));
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+  	// for normalized values
+   // .domain([0, 1])
+  	// for non normalized values
+    .domain([0, 300])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
+  // Add dots
+    	svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height + 35)
+    .text("minplaytime");
+
+// Y axis label:
+svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -margin.left+ 15)
+    .attr("x", 0)
+    .text("maxplaytime")
+
+
+  svg.append('g')
+    .selectAll("dot")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("cx", function (d) { return x(d.x); } )
+      .attr("cy", function (d) { return y(d.y); } )
+      .attr("r", 3)
+     .style('fill', 
+     	//"green")
+     	function(d) {
+     	switch(d.centroid_index) {
+     		case 0:
+     			//console.log("Color: green, Index: " + d.centroid_index + ", X: " + d.x + ", Y: " + d.y);
+	        	return "#D81B60"
+
+	        case 1:
+     			//console.log("Color: red, Index: " + d.centroid_index + ", X: " + d.x + ", Y: " + d.y);
+	        	return "#FFC107"
+
+	        case 2:
+     			//console.log("Color: blue, Index: " + d.centroid_index + ", X: " + d.x + ", Y: " + d.y);
+	        	return "#1E88E5"
+	      }
+
+	     })
+});
+     // .style("fill", "green")
+
+	  //})
+  }
 function LDA(){
 
 	// append the svg object to the body of the page
@@ -592,6 +673,7 @@ function LDA(){
 // draw visualizations
 drawFirstVis();
 drawSecondVis();
+drawClusterVis();
 LDA();
 
 // switch canvas
@@ -622,7 +704,7 @@ function changeInfo(evt, info) {
 
 		updateVisualization(2);
 
-	} else if (info == "Details2"){
+	} else if (info == "Details2" || info == "Details3"){
 
 		document.getElementById("legend").style.visibility = "hidden";
 		document.getElementById("zoomButtons").style.visibility = "hidden";
@@ -681,5 +763,4 @@ function updateVisualization(vis) {
 
 	}
 }
-
 
