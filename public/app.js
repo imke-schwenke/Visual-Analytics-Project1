@@ -501,7 +501,7 @@ function drawClusterVis(){
 	  .attr("height", height + margin.top + margin.bottom)
 	  .append("g")
 	  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-  	addTitle(svg, "Clustering of Gamest for min-, and max playtime");
+  	addTitle(svg, "Clustering of Games for Minimum and Maximum Playtime");
 	//reading in the data
 	d3.json("boardgames_100.json").then(function(data) {
 		data = preprocessClusters(data, 3);
@@ -513,9 +513,9 @@ function drawClusterVis(){
    // .domain([0, 1])
 	    // for non noramlized values
 	.domain([0, 180])
-    .range([ 0, width ]);
+    .range([0, width + 400]);
  	svg.append("g")
-    	.attr("transform", "translate(0," + height + ")")
+	 .attr("transform", `translate(0, 600)`)
     	.call(d3.axisBottom(x));
 
   // Add Y axis
@@ -524,15 +524,15 @@ function drawClusterVis(){
    // .domain([0, 1])
   	// for non normalized values
     .domain([0, 300])
-    .range([ height, 0]);
+    .range([height + 380, 0]);
   svg.append("g")
     .call(d3.axisLeft(y));
-  // Add dots
-    	svg.append("text")
+  // X axis label
+    svg.append("text")
     .attr("text-anchor", "end")
     .attr("x", width)
-    .attr("y", height + 35)
-    .text("minplaytime");
+    .attr("y", height + 420)
+    .text("Minimum Playtime");
 
 // Y axis label:
 svg.append("text")
@@ -540,9 +540,9 @@ svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", -margin.left+ 15)
     .attr("x", 0)
-    .text("maxplaytime")
+    .text("Maximum Playtime")
 
-
+	//add dots
   svg.append('g')
     .selectAll("dot")
     .data(data)
@@ -704,12 +704,17 @@ function changeInfo(evt, info) {
 
 		updateVisualization(2);
 
-	} else if (info == "Details2" || info == "Details3"){
+	} else if (info == "Details2"){
 
 		document.getElementById("legend").style.visibility = "hidden";
 		document.getElementById("zoomButtons").style.visibility = "hidden";
 
 		updateVisualization(3);
+	} else if (info == "Details3"){
+		document.getElementById("legend").style.visibility = "hidden";
+		document.getElementById("zoomButtons").style.visibility = "hidden";
+
+		updateVisualization(4);
 	} else {
 		document.getElementById("cbShort").checked = true;
 		document.getElementById("cbMedium").checked = true;
@@ -760,6 +765,10 @@ function updateVisualization(vis) {
 
 	}if (vis == 3) {
 		LDA();
+
+	}
+	if (vis == 4) {
+		drawClusterVis();
 
 	}
 }
