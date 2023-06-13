@@ -4,110 +4,110 @@ html,
 body,
 head,
 svg {
-  padding: 0;
-  margin: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
 /* Grid-Layouting the Dashboard */
 body {
-  display: grid;
+    display: grid;
 
-  grid-template-areas: "header" "content";
-  grid-template-rows: 100px auto;
+    grid-template-areas: 'header' 'content';
+    grid-template-rows: 100px auto;
 }
 
 /* Layouting and styling the Header */
 .header {
-  grid-area: header;
+    grid-area: header;
 
-  background-color: #3e566c;
+    background-color: #3e566c;
 
-  box-sizing: border-box;
+    box-sizing: border-box;
 
-  display: grid;
-  grid-template-areas: "logo title buttons";
-  grid-template-columns: 250px auto;
+    display: grid;
+    grid-template-areas: 'logo title buttons';
+    grid-template-columns: 250px auto;
 
-  border-bottom: 2px solid white;
+    border-bottom: 2px solid white;
 }
 
 .title {
-  grid-area: title;
-  align-items: center;
-  color: white;
-  display: flex;
-  flex-direction: column;
+    grid-area: title;
+    align-items: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Styling the logo */
 .logo {
-  grid-area: logo;
+    grid-area: logo;
 
-  padding: 5px;
-  cursor: pointer;
+    padding: 5px;
+    cursor: pointer;
 }
 
 .content {
-  grid-area: content;
+    grid-area: content;
 }
 
 /* Styling the buttons */
 .buttons {
-  grid-area: buttons;
+    grid-area: buttons;
 
-  margin: 40px;
+    margin: 40px;
 
-  /* Flexbox is used, because you can add multiple buttons without worrying about the layout 
+    /* Flexbox is used, because you can add multiple buttons without worrying about the layout 
     More at: https://css-tricks.com/snippets/css/a-guide-to-flexbox/ */
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
 }
 
 .function_button {
-  margin: 5px;
-  cursor: pointer;
-  border-radius: 10px;
-  border-color: #3e566c;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 10px;
+    border-color: #3e566c;
 }
 
 .function_button:hover {
-  background-color: #3e566c;
+    background-color: #3e566c;
 
-  color: white;
-  border-color: white;
+    color: white;
+    border-color: white;
 }
 
 #legend,
 #zoomButtons {
-  position: fixed;
-  right: 270px;
-  top: 380px;
-  width: 200px;
+    position: fixed;
+    right: 270px;
+    top: 380px;
+    width: 250px;
 }
 
 #cbShort {
-  accent-color:#FFC107;
+    accent-color: #ffc107;
 }
 
 #cbMedium {
-  accent-color: #1E88E5;
+    accent-color: #1e88e5;
 }
 
 #cbLong {
-  accent-color: #D81B60;
+    accent-color: #d81b60;
 }
 
 #text1 {
-  background-color: purple;
+    background-color: purple;
 }
 
 .tooltip {
-  position: absolute;
-  pointer-events: none;
-  background: #000;
-  color: #fff;
+    position: absolute;
+    pointer-events: none;
+    background: #000;
+    color: #fff;
 }

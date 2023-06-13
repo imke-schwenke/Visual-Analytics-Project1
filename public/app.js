@@ -570,7 +570,7 @@ function drawClusterVis() {
     //reading in the data
     d3.json('boardgames_100.json').then(function (data) {
         data = preprocessClusters(data, 3);
-        console.log(data);
+        //console.log(data);
 
         var x = d3
             .scaleLinear()
@@ -618,7 +618,7 @@ function drawClusterVis() {
                 return x(d.x);
             })
             .attr('cy', function (d) {
-                console.log('Y: ' + d.y);
+                // console.log('Y: ' + d.y);
                 return y(d.y);
             })
             .attr('r', 3)
@@ -626,7 +626,7 @@ function drawClusterVis() {
                 'fill',
                 //"green")
                 function (d) {
-                    console.log(d);
+                    // console.log(d);
                     switch (d.centroid_index) {
                         case 0:
                             //console.log("Color: green, Index: " + d.centroid_index + ", X: " + d.x + ", Y: " + d.y);
@@ -851,6 +851,11 @@ function changeInfo(evt, info) {
         document.getElementById('zoomButtons').style.visibility = 'hidden';
 
         updateVisualization(4);
+    } else if (info == 'PageRankTab') {
+        document.getElementById('legend').style.visibility = 'hidden';
+        document.getElementById('zoomButtons').style.visibility = 'hidden';
+
+        updateVisualization(6);
     } else {
         document.getElementById('cbShort').checked = true;
         document.getElementById('cbMedium').checked = true;
@@ -896,5 +901,8 @@ function updateVisualization(vis) {
     }
     if (vis == 4) {
         drawClusterVis();
+    }
+    if (vis == 6) {
+        processPageRankData();
     }
 }
