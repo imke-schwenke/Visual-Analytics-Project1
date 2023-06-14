@@ -98,18 +98,6 @@
             <button id="zoom-" onclick="updateScale(-1)">-</button>
         </div>
 
-        <script>
-            window.onload = onPageLoad();
-
-            function onPageLoad() {
-                document.getElementById('cbShort').checked = true;
-                document.getElementById('cbMedium').checked = true;
-                document.getElementById('cbLong').checked = true;
-                document.getElementById('zoomButtons').style.visibility =
-                    'hidden';
-            }
-        </script>
-
         <!-- Canvas for first vis -->
         <div id="General" class="tabcontent">
             <div id="canvas"></div>
@@ -185,6 +173,26 @@
                             <span>32</span>
                         </div>
                     </div>
+
+                    <div style="padding-top: 20px; text-align: left">
+                        <input
+                            type="radio"
+                            name="rbLinks"
+                            id="incoming"
+                            value="incoming"
+                            onchange="processPageRankData(sliderMin.value, sliderMax.value)"
+                        />
+                        Incoming
+                        <input
+                            type="radio"
+                            name="rbLinks"
+                            id="outgoing"
+                            value="outgoing"
+                            onchange="processPageRankData(sliderMin.value, sliderMax.value)"
+                        />
+                        Outgoing
+                        <span style="padding-left: 30px"> links shown</span>
+                    </div>
                 </aside>
             </div>
         </div>
@@ -218,7 +226,7 @@
                             document.getElementById('maxPagerank').innerHTML
                         );
                         alert('Max cant be smaller than min value.');
-                        console.log(document.getElementById('maxPagerank'));
+                        // console.log(document.getElementById('maxPagerank'));
 
                         return;
                     }
@@ -228,6 +236,20 @@
                     processPageRankData(sliderMin.value, this.value);
                 });
             });
+        </script>
+
+        <script>
+            window.onload = onPageLoad();
+
+            function onPageLoad() {
+                document.getElementById('cbShort').checked = true;
+                document.getElementById('cbMedium').checked = true;
+                document.getElementById('cbLong').checked = true;
+                document.getElementById('zoomButtons').style.visibility =
+                    'hidden';
+
+                document.getElementById('incoming').checked = true;
+            }
         </script>
 
         <script src="https://d3js.org/d3.v7.min.js"></script>

@@ -62,7 +62,7 @@ function drawPageRankVis(graphObject) {
         .data(graphObject.links)
         .join('line')
         .style('stroke', '#aaa')
-        .style('stroke-width', 1.5)
+        .style('stroke-width', 1)
         .style('opacity', function (d) {
             if (d.filter) {
                 return '10%';
@@ -78,7 +78,7 @@ function drawPageRankVis(graphObject) {
 
             // console.log(i);
 
-            d3.select(this).style('stroke-width', 5);
+            d3.select(this).style('stroke-width', 3);
             d3.select(this).style('stroke', 'red');
 
             tooltip
@@ -96,7 +96,7 @@ function drawPageRankVis(graphObject) {
             if (i.filter) {
                 return;
             }
-            d3.select(this).style('stroke-width', 1.5);
+            d3.select(this).style('stroke-width', 1);
             d3.select(this).style('stroke', '#aaa');
 
             tooltip.style('visibility', 'hidden');
@@ -365,11 +365,20 @@ function processPageRankData(minPagerank, maxPagerank) {
             links.push({
                 source: graph[i][0],
                 target: graph[i][1],
-                filter: nodes[graph[i][1]].filter ? true : false,
-                // TODO
+                filter:
+                    document.querySelector('input[name="rbLinks"]:checked')
+                        .value === 'incoming'
+                        ? nodes[graph[i][1]].filter
+                            ? true
+                            : false
+                        : nodes[graph[i][0]].filter
+                        ? true
+                        : false,
             });
         }
         // console.log(links);
+
+        // console.log(document.querySelector('input[name="rbLinks"]:checked'));
 
         const graphObject = {
             nodes: nodes,
