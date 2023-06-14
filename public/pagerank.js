@@ -20,6 +20,10 @@ const svg = d3
         `translate(${marginPagerank.left}, ${marginPagerank.top})`
     );
 
+function raise(line) {
+    d3.select(line).raise();
+}
+
 function drawPageRankVis(graphObject) {
     svg.selectAll('*').remove();
 
@@ -58,12 +62,44 @@ function drawPageRankVis(graphObject) {
         .data(graphObject.links)
         .join('line')
         .style('stroke', '#aaa')
+        .style('stroke-width', 1.5)
         .style('opacity', function (d) {
             if (d.filter) {
                 return '10%';
             } else {
+                raise(this);
                 return '100%';
             }
+        })
+        .on('mouseover', function (d, i) {
+            if (i.filter) {
+                return;
+            }
+
+            // console.log(i);
+
+            d3.select(this).style('stroke-width', 5);
+            d3.select(this).style('stroke', 'red');
+
+            tooltip
+                .style('visibility', 'visible')
+                .html(
+                    `
+                    Source: ${i.source.id} <br/>
+                    Target: ${i.target.id} <br/>
+                    `
+                )
+                .style('left', event.pageX + 10 + 'px')
+                .style('top', event.pageY - 15 + 'px');
+        })
+        .on('mouseout', function (d, i) {
+            if (i.filter) {
+                return;
+            }
+            d3.select(this).style('stroke-width', 1.5);
+            d3.select(this).style('stroke', '#aaa');
+
+            tooltip.style('visibility', 'hidden');
         });
 
     // console.log(graphObject.nodes);
@@ -322,14 +358,15 @@ function processPageRankData(minPagerank, maxPagerank) {
             });
         }
         // console.log(boardGameIDs);
-        console.log(nodes);
+        // console.log(nodes);
 
         const links = [];
         for (var i = 0; i < graph.length; i++) {
             links.push({
                 source: graph[i][0],
                 target: graph[i][1],
-                filter: nodes[graph[i][0]].filter ? true : false,
+                filter: nodes[graph[i][1]].filter ? true : false,
+                // TODO
             });
         }
         // console.log(links);
