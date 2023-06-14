@@ -869,7 +869,7 @@ function changeInfo(evt, info) {
 }
 
 function updateScale(zoomType) {
-    d3.select('svg').remove();
+    svg.selectAll('*').remove();
 
     if (zoomType == -1) {
         if (yScaleLowerBounds > 0) {
@@ -888,21 +888,25 @@ function updateScale(zoomType) {
 }
 
 function updateVisualization(vis) {
-    d3.select('svg').remove();
+    // d3.select('svg').remove();
 
     if (vis == 1) {
+        d3.select('svg').remove();
         drawFirstVis();
     }
     if (vis == 2) {
+        d3.select('svg').remove();
         drawSecondVis();
     }
     if (vis == 3) {
+        d3.select('svg').remove();
         LDA();
     }
     if (vis == 4) {
+        d3.select('svg').remove();
         drawClusterVis();
     }
     if (vis == 6) {
-        processPageRankData();
+        processPageRankData(0, 32);
     }
 }

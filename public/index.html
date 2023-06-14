@@ -130,15 +130,109 @@
         </div>
 
         <!-- Canvas for Pagerank -->
-        <div id="PageRankTab" class="tabcontent" style="display: none">
-            <div id="canvas6"></div>
+        <div
+            id="PageRankTab"
+            class="tabcontent"
+            style="display: none; overflow: auto"
+        >
+            <div id="canvas6">
+                <div id="loading">Loading...</div>
+                <aside style="padding-top: 0">
+                    <div id="pagerankLegend" style="padding-bottom: 20px">
+                        <h1>Legend</h1>
+                        <img id="greenCircleImg" src="greenCircle.png" alt="" />
+                        <span>Boardgame (hover to display pagerank)</span>
+                        <img id="lineImg" src="line.png" alt="" />
+                        <span>Recommendation </span>
+                    </div>
+
+                    <hr />
+
+                    <h1>Pagerank Filter</h1>
+                    <div id="pagerankFilter">
+                        <div>
+                            <span> Min: </span>
+                            <span id="minPagerank"> 0 </span>
+                            <br />
+                            <span> Max: </span>
+                            <span id="maxPagerank"> 32 </span>
+                        </div>
+
+                        <div>
+                            <span>0</span>
+                            <input
+                                type="range"
+                                name="pagerankSliderMin"
+                                id="sliderMin"
+                                value="0"
+                                min="0"
+                                max="32"
+                            />
+                            <span>32</span>
+
+                            <br />
+
+                            <span>0</span>
+                            <input
+                                type="range"
+                                name="pagerankSliderMax"
+                                id="sliderMax"
+                                value="32"
+                                min="0"
+                                max="32"
+                            />
+                            <span>32</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
         </div>
+
+        <script>
+            // EventListener hinzufügen
+            window.addEventListener('load', function () {
+                // Range-Slider in Variable speichern
+                var sliderMin = document.getElementById('sliderMin');
+                var sliderMax = document.getElementById('sliderMax');
+
+                // EventListener für das Verändern des SlidersMin hinzufügen
+                sliderMin.addEventListener('change', function () {
+                    if (Number(this.value) > Number(sliderMax.value)) {
+                        this.value = Number(
+                            document.getElementById('minPagerank').innerHTML
+                        );
+                        alert('Min cant be greater than max value.');
+                        return;
+                    }
+                    // Testelement verschieben, indem Inline-Styles eingefügt werden
+                    document.getElementById('minPagerank').innerHTML =
+                        this.value;
+                    processPageRankData(this.value, sliderMax.value);
+                });
+
+                // EventListener für das Verändern des SlidersMax hinzufügen
+                sliderMax.addEventListener('change', function () {
+                    if (Number(this.value) < Number(sliderMin.value)) {
+                        this.value = Number(
+                            document.getElementById('maxPagerank').innerHTML
+                        );
+                        alert('Max cant be smaller than min value.');
+                        console.log(document.getElementById('maxPagerank'));
+
+                        return;
+                    }
+                    // Testelement verschieben, indem Inline-Styles eingefügt werden
+                    document.getElementById('maxPagerank').innerHTML =
+                        this.value;
+                    processPageRankData(sliderMin.value, this.value);
+                });
+            });
+        </script>
 
         <script src="https://d3js.org/d3.v7.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
 
-        <script src=""></script>
-        <script src="pagerank.js"></script>
+        <script src="pagerank.js" defer></script>
 
         <!--<script src="LDA.js"></script>-->
         <script src="index.js"></script>

@@ -111,3 +111,46 @@ body {
     background: #000;
     color: #fff;
 }
+
+#loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999 !important;
+}
+
+aside {
+    position: absolute;
+    top: 110px;
+    right: 30px;
+    /* transform: translate(-50%, -50%); */
+    z-index: 9999 !important;
+    width: 300px;
+    height: 260px;
+    background-color: lightgray;
+    text-align: left;
+    padding: 20px;
+}
+
+#greenCircleImg {
+    width: 20px;
+    height: 20px;
+    background-color: green;
+    border-radius: 50%;
+    /* display: inline-block; */
+}
+
+#lineImg {
+    width: 20px;
+    height: 20px;
+    background-color: black;
+    border-radius: 50%;
+    /* display: inline-block; */
+}
+
+#pagerankFilter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

@@ -1,27 +1,53 @@
-function drawPageRankVis(graphObject, boardgamesRanked) {
-    // set the dimensions and margins of the graph
-    const margin = {
-            top: 800,
-            right: 0,
-            bottom: 30,
-            left: 1500,
-        },
-        width = 460 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+// set the dimensions and margins of the graph
+const marginPagerank = {
+        top: 1000,
+        right: 0,
+        bottom: 30,
+        left: 1500,
+    },
+    widthPagerank = 260 - marginPagerank.left - marginPagerank.right,
+    heightPagerank = 200 - marginPagerank.top - marginPagerank.bottom;
 
-    // append the svg object to the body of the page
-    const svg = d3
-        .select('#canvas6')
-        .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .append('g')
-        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+// append the svg object to the body of the page
+const svg = d3
+    .select('#canvas6')
+    .append('svg')
+    .attr('width', widthPagerank + marginPagerank.left + marginPagerank.right)
+    .attr('height', heightPagerank + marginPagerank.top + marginPagerank.bottom)
+    .append('g')
+    .attr(
+        'transform',
+        `translate(${marginPagerank.left}, ${marginPagerank.top})`
+    );
 
+function drawPageRankVis(graphObject) {
+    svg.selectAll('*').remove();
+
+    // title background
+    svg.append('rect')
+        .attr('x', widthPagerank + 85)
+        .attr('y', heightPagerank - 150)
+        .attr('width', 720)
+        .attr('height', 30)
+        .attr('fill', '#4c9786');
+
+    // title
     svg.append('text')
         .attr('text-anchor', 'end')
-        .attr('x', width + 600)
-        .attr('y', 300)
+        .attr('x', widthPagerank + 800)
+        .attr('y', heightPagerank - 130)
+        .text(
+            'Significant Boardgames based on the recommendations using the pagerank method'
+        )
+        .style('font-size', '20px')
+        .style('fill', 'white')
+        .style('font-weight', 'bold');
+
+    // Pagerank Disclaimer
+    svg.append('text')
+        .attr('text-anchor', 'end')
+        .attr('x', widthPagerank + 800)
+        .attr('y', heightPagerank - 100)
         .text(
             '* Actual calculated pagerank has been multiplied with 1000 for readability purposes.'
         );
@@ -31,7 +57,14 @@ function drawPageRankVis(graphObject, boardgamesRanked) {
         .selectAll('line')
         .data(graphObject.links)
         .join('line')
-        .style('stroke', '#aaa');
+        .style('stroke', '#aaa')
+        .style('opacity', function (d) {
+            if (d.filter) {
+                return '10%';
+            } else {
+                return '100%';
+            }
+        });
 
     // console.log(graphObject.nodes);
 
@@ -40,12 +73,16 @@ function drawPageRankVis(graphObject, boardgamesRanked) {
         .selectAll('circle')
         .data(graphObject.nodes)
         .join('circle')
+        .style('fill', '#69b3a2')
         .attr('r', function (d) {
             return d.rank * 1000;
 
             // return 20;
         })
         .on('mouseover', function (d, i) {
+            if (i.filter) {
+                return;
+            }
             d3.select(this).attr('r', d3.select(this).attr('r') * 1.5);
             d3.select(this).style('fill', '#4c9786');
 
@@ -56,7 +93,7 @@ function drawPageRankVis(graphObject, boardgamesRanked) {
                     <b>
                     Pagerank: ${(i.rank * 1000).toFixed(2)} 
                     </b> <br/> <hr/>
-                    <!-- Node: ${i.id} <br/> -->
+                    Node: ${i.id} <br/>
                     ID: ${i.idNumber} <br/> 
                     Title: ${i.title} <br/> 
                     Year: ${i.year} <br/> 
@@ -66,13 +103,22 @@ function drawPageRankVis(graphObject, boardgamesRanked) {
                 .style('left', event.pageX + 10 + 'px')
                 .style('top', event.pageY - 15 + 'px');
         })
-        .on('mouseout', function (d) {
+        .on('mouseout', function (d, i) {
+            if (i.filter) {
+                return;
+            }
             d3.select(this).attr('r', d3.select(this).attr('r') / 1.5);
             d3.select(this).style('fill', '#69b3a2');
 
             tooltip.style('visibility', 'hidden');
         })
-        .style('fill', '#69b3a2');
+        .style('opacity', function (d) {
+            if (d.filter) {
+                return '30%';
+            } else {
+                return '100%';
+            }
+        });
 
     // Tooltip to be shown on mouse hover
     var tooltip = d3
@@ -99,7 +145,7 @@ function drawPageRankVis(graphObject, boardgamesRanked) {
                 .links(graphObject.links) // and this the list of links
         )
         .force('charge', d3.forceManyBody().strength(-400)) // This adds repulsion between nodes. Play with the -400 for the repulsion strength
-        .force('center', d3.forceCenter(width / 2, height / 2)) // This force attracts nodes to the center of the svg area
+        .force('center', d3.forceCenter(widthPagerank / 2, heightPagerank / 2)) // This force attracts nodes to the center of the svg area
         .on('end', ticked);
 
     // This function is run at each iteration of the force algorithm, updating the nodes position.
@@ -189,11 +235,19 @@ function normalizeRanks(ranks) {
     }
 }
 
-function processPageRankData() {
+function startLoadingCountdown() {
+    document.getElementById('loading').style.visibility = 'visible';
+    setTimeout(function () {
+        document.getElementById('loading').style.visibility = 'hidden';
+    }, 4000);
+}
+
+function processPageRankData(minPagerank, maxPagerank) {
+    startLoadingCountdown();
+
     // load data
     d3.json('/boardgames_100.json').then(function (boardgames) {
         let processedBoardgames = [];
-        let graph = [];
 
         for (var i = 0; i < boardgames.length; i++) {
             processedBoardgames.push({
@@ -207,6 +261,8 @@ function processPageRankData() {
         }
 
         // console.log(processedBoardgames);
+
+        let graph = [];
 
         for (var i in processedBoardgames) {
             for (var j in processedBoardgames[i].recommendations) {
@@ -258,15 +314,22 @@ function processPageRankData() {
                 title: boardgamesRanked[i].title,
                 year: boardgamesRanked[i].year,
                 originalRank: boardgamesRanked[i].originalRank,
+                filter:
+                    boardgamesRanked[i].rank * 1000 < minPagerank ||
+                    boardgamesRanked[i].rank * 1000 > maxPagerank
+                        ? true
+                        : false,
             });
         }
         // console.log(boardGameIDs);
+        console.log(nodes);
 
         const links = [];
         for (var i = 0; i < graph.length; i++) {
             links.push({
                 source: graph[i][0],
                 target: graph[i][1],
+                filter: nodes[graph[i][0]].filter ? true : false,
             });
         }
         // console.log(links);
@@ -276,6 +339,8 @@ function processPageRankData() {
             links: links,
         };
 
-        drawPageRankVis(graphObject, boardgamesRanked);
+        drawPageRankVis(graphObject);
     });
 }
+
+processPageRankData(0, 32);
