@@ -19,6 +19,16 @@ body {
     grid-template-rows: 100px auto;
 }
 
+.container {
+    display: grid;
+    
+    grid-template-columns: 1fr 5fr;
+    grid-row: 1fr 5fr;
+    grid-template-areas: 
+        "header header"
+        "sidePanel mainContent";
+}
+
 /* Layouting and styling the Header */
 .header {
     grid-area: header;
@@ -33,6 +43,7 @@ body {
 
     border-bottom: 2px solid white;
 }
+
 
 .title {
     grid-area: title;
@@ -152,3 +163,28 @@ aside {
     justify-content: space-between;
     align-items: center;
 }
+
+/* The filter box */
+.filter {
+    padding: 20px;
+    background-color: gray; 
+    color: white;
+    margin-bottom: 15px;
+  }
+  
+  /* The close button */
+  .closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  /* When moving the mouse over the close button */
+  .closebtn:hover {
+    color: black;
+  }

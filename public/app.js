@@ -1,6 +1,11 @@
 var yScaleLowerBounds = 0; // 0-8.16
 var lowerOverlap = 0;
 
+var filterSet = false;
+
+let Minimum = 0;
+let Maximum = 32;
+
 // set the dimensions and margins of the graph
 var margin = {
         top: 150,
@@ -11,11 +16,26 @@ var margin = {
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
-function drawFirstVis() {
+function readInData(){
+    // d3.json('/boardgames_40.json').then(function (data){
+    //     drawFirstVis(data);
+    //     drawSecondVis(data);
+    // })
+    d3.json('/boardgames_100.json').then(function (data){
+        drawFirstVis(data);
+        drawSecondVis(data);
+        LDA(data);
+        drawClusterVis(data);
+    })
+}
+
+function drawFirstVis(data) {
     // append the svg object to the body of the page
+    d3.select('#svg1').remove();
     var svg = d3
         .select('#canvas')
         .append('svg')
+        .attr('id', 'svg1')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
@@ -27,7 +47,6 @@ function drawFirstVis() {
     addAxisTitle(svg, 'Years', 'Amount');
 
     //Read the data
-    d3.json('/boardgames_40.json').then(function (data) {
         data = processBoardGameData(data);
         data_long = longTemporalProcessing(data);
         data_medium = mediumTemporalProcessing(data);
@@ -37,7 +56,34 @@ function drawFirstVis() {
         var mediumIsChecked = document.getElementById('cbMedium').checked;
         var longIsChecked = document.getElementById('cbLong').checked;
 
-        if (longIsChecked) {
+        if (longIsChecked & mediumIsChecked & shortIsChecked) {
+            // scale x values
+            var x = ScaleX(data_long.concat(data_medium).concat(data_short));
+            // create and append x Axis
+            getXAxis(svg, data_long.concat(data_medium).concat(data_short));
+            // scale y values
+            var y = ScaleY(data_long.concat(data_medium).concat(data_short));
+            // create and append x Axis
+            getYAxis(svg, data_long);
+        } else if (longIsChecked & mediumIsChecked) {
+            // scale x values
+            var x = ScaleX(data_long.concat(data_medium));
+            // create and append x Axis
+            getXAxis(svg, data_long.concat(data_medium));
+            // scale y values
+            var y = ScaleY(data_medium);
+            // create and append x Axis
+            getYAxis(svg, data_long.concat(data_medium));
+        } else if(mediumIsChecked & shortIsChecked){
+            // scale x values
+            var x = ScaleX(data_medium.concat(data_short));
+            // create and append x Axis
+            getXAxis(svg, data_medium.concat(data_short));
+            // scale y values
+            var y = ScaleY(data_medium.concat(data_short));
+            // create and append x Axis
+            getYAxis(svg, data_medium.concat(data_short));
+        }else if (longIsChecked) {
             // scale x values
             var x = ScaleX(data_long);
             // create and append x Axis
@@ -46,7 +92,7 @@ function drawFirstVis() {
             var y = ScaleY(data_long);
             // create and append x Axis
             getYAxis(svg, data_long);
-        } else if (mediumIsChecked) {
+        }else if (mediumIsChecked) {
             // scale x values
             var x = ScaleX(data_medium);
             // create and append x Axis
@@ -55,7 +101,7 @@ function drawFirstVis() {
             var y = ScaleY(data_medium);
             // create and append x Axis
             getYAxis(svg, data_medium);
-        } else {
+        }else if (shortIsChecked) {
             // scale x values
             var x = ScaleX(data_short);
             // create and append x Axis
@@ -127,7 +173,6 @@ function drawFirstVis() {
                         })
                 );
         }
-    });
 }
 
 // function for scaling x
@@ -440,21 +485,23 @@ function ratingProcessing(data) {
     return result;
 }
 
-function drawSecondVis() {
+function drawSecondVis(data) {
+
     // append the svg object to the body of the page
+    d3.select('#svg2').remove();
     var svg = d3
-        .select('#canvas2')
-        .append('svg')
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .append('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+    .select('#canvas2')
+    .append('svg')
+    .attr('id', 'svg2')
+    .attr('width', width + margin.left + margin.right)
+    .attr('height', height + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');    
 
     //add Title, Subtitle and Axis Labels for Visualization
     addTitle(svg, 'Average Rating per Duration');
 
-    //Read the data
-    d3.json('/boardgames_40.json').then(function (data) {
+    //Process the data
         data = processBoardGameData(data);
         data = ratingProcessing(data);
 
@@ -543,9 +590,8 @@ function drawSecondVis() {
         // create and append x Axis
         var xAxis = d3.axisBottom(x2);
         svg.append('g').attr('transform', `translate(0, 600)`).call(xAxis);
-    });
 }
-function drawClusterVis() {
+function drawClusterVis(data) {
     // Tooltip to be shown on mouse hover
     var tooltip = d3
         .select('#canvas4')
@@ -558,19 +604,20 @@ function drawClusterVis() {
         .style('border-radius', '5px')
         .style('padding', '10px');
 
+
+    d3.select('#svg4').remove();
     // append the svg object to the body of the page
     var svg = d3
         .select('#canvas4')
         .append('svg')
+        .attr('id', 'svg4')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
     addTitle(svg, 'Clustering of Games for Minimum and Maximum Playtime');
     //reading in the data
-    d3.json('boardgames_100.json').then(function (data) {
         data = preprocessClusters(data, 3);
-        //console.log(data);
 
         var x = d3
             .scaleLinear()
@@ -655,13 +702,12 @@ function drawClusterVis() {
                 tooltip.style('visibility', 'hidden');
                 d3.select(this).attr('r', 3);
             });
-    });
     // .style("fill", "green")
 
     //})
 }
 
-function LDA() {
+function LDA(data) {
     // Tooltip to be shown on mouse hover
     var tooltip = d3
         .select('#canvas3')
@@ -674,10 +720,13 @@ function LDA() {
         .style('border-radius', '5px')
         .style('padding', '10px');
 
+    d3.select('#svg3').remove();
+
     // append the svg object to the body of the page
     var svg = d3
         .select('#canvas3')
         .append('svg')
+        .attr('id','svg3')
         .attr('width', width + margin.left + margin.right)
         .attr('height', height + margin.top + margin.bottom)
         .append('g')
@@ -693,8 +742,6 @@ function LDA() {
     addSubtitle(svg);
     getLegend(svg, ['Top 25 Games', 'Top 100 Games'], ['#D81B60', '#FFC107']);
 
-    //reading in the data
-    d3.json('boardgames_100.json').then(function (data) {
         // data processing
         data = preprocessLDAData(data);
         var top_25 = data.slice(0, 25);
@@ -782,20 +829,19 @@ function LDA() {
                 tooltip.style('visibility', 'hidden');
                 d3.select(this).attr('r', 3);
             });
-    });
 }
 
 function preprocessLDAData(data) {
     var matrix = data.map((a) => [a.minplaytime, a.maxplayers, a.minage]);
     var classes = [];
     var counter = 0;
-    while (counter < 25) {
-        classes.push('Top 25');
-        counter += 1;
-    }
-    while (counter < 100) {
-        classes.push('Top 100');
-        counter += 1;
+    for(let i =0; i<data.length; i++){
+        if(data[i].rank <= 25){
+            classes.push('Top 25');
+        }
+        else{
+            classes.push('Top 100')
+        }
     }
     const X = druid.Matrix.from(matrix); // X is the data as object of the Matrix class.
     const reductionLDA = new druid.LDA(X, { labels: classes, d: 2 }); //2 dimensions, can use more.
@@ -810,10 +856,11 @@ function preprocessLDAData(data) {
 }
 
 // draw visualizations
-drawFirstVis();
-drawSecondVis();
-drawClusterVis();
-LDA();
+//drawFirstVis();
+readInData();
+//drawSecondVis();
+//drawClusterVis();
+//LDA();
 
 // switch canvas
 function changeInfo(evt, info) {
@@ -840,22 +887,22 @@ function changeInfo(evt, info) {
         document.getElementById('legend').style.visibility = 'hidden';
         document.getElementById('zoomButtons').style.visibility = 'visible';
 
-        updateVisualization(2);
+        //updateVisualization(2);
     } else if (info == 'Details2') {
         document.getElementById('legend').style.visibility = 'hidden';
         document.getElementById('zoomButtons').style.visibility = 'hidden';
 
-        updateVisualization(3);
+        //updateVisualization(3);
     } else if (info == 'Details3') {
         document.getElementById('legend').style.visibility = 'hidden';
         document.getElementById('zoomButtons').style.visibility = 'hidden';
 
-        updateVisualization(4);
+        //updateVisualization(4);
     } else if (info == 'PageRankTab') {
         document.getElementById('legend').style.visibility = 'hidden';
         document.getElementById('zoomButtons').style.visibility = 'hidden';
 
-        updateVisualization(6);
+        //updateVisualization(6);
     } else {
         document.getElementById('cbShort').checked = true;
         document.getElementById('cbMedium').checked = true;
@@ -864,7 +911,7 @@ function changeInfo(evt, info) {
         document.getElementById('legend').style.visibility = 'visible';
         document.getElementById('zoomButtons').style.visibility = 'hidden';
 
-        updateVisualization(1);
+        //updateVisualization(1);
     }
 }
 
@@ -884,29 +931,174 @@ function updateScale(zoomType) {
 
     document.getElementById('zoomText').value = yScaleLowerBounds + '/8';
 
-    updateVisualization(2);
+    updateVisualization();
 }
 
-function updateVisualization(vis) {
-    // d3.select('svg').remove();
+function createFilter(minPagerank, maxPagerank){
+    filterSet = true;
+    Minimum = minPagerank;
+    Maximum = maxPagerank;
+    document.getElementById('filter').style.visibility = 'visible';
+    document.getElementById('minValue').innerHTML = Minimum;
+    document.getElementById('maxValue').innerHTML = Maximum;
+    processDataByPagerank(Minimum, Maximum);
+    
+    
+    var sidePanel = d3
+        .select('#sidePanel')
+    //sidePanel.createElement()
+}
 
-    if (vis == 1) {
+function closeFilter(){
+    filterSet = false;
+    Minimum = 0;
+    Maximum = 32;
+    document.getElementById('filter').style.visibility = 'hidden';
+    document.getElementById('minValue').innerHTML = Minimum;
+    document.getElementById('maxValue').innerHTML = Maximum;
+    readInData();
+}
+
+function processDataByPagerank(minPagerank, maxPagerank) {
+        // load data
+        d3.json('/boardgames_100.json').then(function (boardgames) {
+            let processedBoardgames = [];
+    
+            for (var i = 0; i < boardgames.length; i++) {
+                processedBoardgames.push({
+                    node: i,
+                    id: boardgames[i].id,
+                    recommendations: boardgames[i].recommendations.fans_liked,
+                    title: boardgames[i].title,
+                    year: boardgames[i].year,
+                    originalRank: boardgames[i].rank,
+                });
+            }
+    
+    
+            let graph = [];
+    
+            for (var i in processedBoardgames) {
+                for (var j in processedBoardgames[i].recommendations) {
+                    for (var k in processedBoardgames) {
+                        if (
+                            processedBoardgames[k].id ===
+                            processedBoardgames[i].recommendations[j]
+                        ) {
+                            graph.push([
+                                processedBoardgames[i].node,
+                                processedBoardgames[k].node,
+                            ]);
+                        }
+                    }
+                }
+                
+            }
+
+    
+            const dampingFactor = 0.85;
+    
+            const ranks = calculatePageRank(graph, dampingFactor);
+    
+            const boardgamesRanked = [];
+    
+            for (let i = 0; i < ranks.length; i++) {
+                if (ranks[i] !== 0 && ranks[i]* 1000>=minPagerank && ranks[i]* 1000<=maxPagerank) {
+                    // console.log(`Knoten ${i}: Rang ${ranks[i]}`);
+                    boardgamesRanked.push({
+                        node: i,
+                        rank: ranks[i],
+                        id: processedBoardgames[i].id,
+                        title: processedBoardgames[i].title,
+                        year: processedBoardgames[i].year,
+                        originalRank: processedBoardgames[i].originalRank,
+                    });
+                }
+            }
+            readDataByPagerank(boardgamesRanked)
+        })
+}
+
+function readDataByPagerank(boardgamesRanked){
+    d3.json('/boardgames_100.json').then(function (data){
+        let filtered_data = [];
+        for (let i = 0; i < boardgamesRanked.length; i++){
+            for(let j=0; j< data.length; j++){
+                if(boardgamesRanked[i].id == data[j].id){
+                    filtered_data.push(data[j])
+                }
+            }
+        }
         d3.select('svg').remove();
-        drawFirstVis();
+        drawFirstVis(filtered_data);
+        drawSecondVis(filtered_data);
+        LDA(filtered_data);
+        drawClusterVis(filtered_data)
+    })
+}
+
+function updateVisualization() {
+    
+    if(filterSet){
+        createFilter(Minimum, Maximum)
     }
-    if (vis == 2) {
-        d3.select('svg').remove();
-        drawSecondVis();
+    else {
+        //d3.select('svg').remove();
+        readInData()
     }
-    if (vis == 3) {
-        d3.select('svg').remove();
-        LDA();
+
+    // if (vis == 1) {
+    //     d3.select('svg').remove();
+    //     if(filterSet){
+
+    //     }
+    //     drawFirstVis();
+    // }
+    // if (vis == 2) {
+    //     d3.select('svg').remove();
+    //     drawSecondVis();
+    // }
+    // if (vis == 3) {
+    //     d3.select('svg').remove();
+    //     LDA();
+    // }
+    // if (vis == 4) {
+    //     d3.select('svg').remove();
+    //     drawClusterVis();
+    // }
+    // if (vis == 6) {
+    //     processPageRankData(0, 32);
+    // }
+}
+
+function calculatePageRank(graph, dampingFactor) {
+    const numNodes = Math.max(...graph.flat()) + 1;
+    const ranks = new Array(numNodes).fill(1);
+    const iterations = 20;
+
+    for (let iteration = 0; iteration < iterations; iteration++) {
+        const newRanks = new Array(numNodes).fill(0);
+
+        for (let node = 0; node < numNodes; node++) {
+            const incomingNodes = getIncomingNodes(graph, node);
+
+            for (const incomingNode of incomingNodes) {
+                const incomingEdges = getOutgoingEdges(graph, incomingNode);
+                const numEdges = incomingEdges.length;
+                const rank = ranks[incomingNode];
+
+                newRanks[node] += rank / numEdges;
+            }
+        }
+
+        for (let node = 0; node < numNodes; node++) {
+            newRanks[node] = 1 - dampingFactor + dampingFactor * newRanks[node];
+        }
+
+        ranks.splice(0, numNodes, ...newRanks);
     }
-    if (vis == 4) {
-        d3.select('svg').remove();
-        drawClusterVis();
-    }
-    if (vis == 6) {
-        processPageRankData(0, 32);
-    }
+
+    normalizeRanks(ranks);
+
+    return ranks;
 }

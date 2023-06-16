@@ -17,6 +17,7 @@
     </head>
 
     <body>
+        <div class = container>
         <div class="header">
             <img
                 class="logo"
@@ -60,142 +61,157 @@
             </div>
         </div>
 
-        <div id="legend">
-            <input
-                type="checkbox"
-                id="cbShort"
-                onclick="updateVisualization(1);"
-            />
+        <div class="sidePanel" id="sidePanel">
+            <div class="filter" id="filter" style="visibility: hidden;">
+                <span class="closebtn" onclick="closeFilter(); closeFilterForPagerank()">&times;</span> 
+                <p>Boardgames mit Pagerank</p>
+                <p>von <span id="minValue"></span> bis <span id="maxValue"></span></p> 
+              </div>
 
-            Short Games (0-60min) <br />
-
-            <input
-                type="checkbox"
-                id="cbMedium"
-                onclick="updateVisualization(1);"
-            />
-
-            Medium Games (61-90min) <br />
-
-            <input
-                type="checkbox"
-                id="cbLong"
-                onclick="updateVisualization(1);"
-            />
-            Long Games (>90min)
         </div>
 
-        <div id="zoomButtons">
-            Zoom:
-            <input
-                type="text"
-                id="zoomText"
-                name="zoomText"
-                value="0/8"
-                readonly
-            />
-            <button id="zoom+" onclick="updateScale(1)">+</button>
-            <button id="zoom-" onclick="updateScale(-1)">-</button>
-        </div>
-
-        <!-- Canvas for first vis -->
-        <div id="General" class="tabcontent">
-            <div id="canvas"></div>
-        </div>
-
-        <!-- Canvas for second vis -->
-        <div id="Details" class="tabcontent" style="display: none">
-            <div id="canvas2"></div>
-        </div>
-
-        <!-- Canvas for LDA -->
-        <div id="Details2" class="tabcontent" style="display: none">
-            <div id="canvas3"></div>
-        </div>
-        <!-- Canvas for Clustering -->
-        <div id="Details3" class="tabcontent" style="display: none">
-            <div id="canvas4"></div>
-        </div>
-
-        <!-- Canvas for Pagerank -->
-        <div
-            id="PageRankTab"
-            class="tabcontent"
-            style="display: none; overflow: auto"
-        >
-            <div id="canvas6">
-                <div id="loading">Loading...</div>
-
-                <aside style="padding-top: 0">
-                    <div id="pagerankLegend" style="padding-bottom: 20px">
-                        <h1>Legend</h1>
-                        <img id="greenCircleImg" src="greenCircle.png" alt="" />
-                        <span>Boardgame (hover to display pagerank)</span>
-                        <img id="lineImg" src="line.png" alt="" />
-                        <span>Recommendation </span>
-                    </div>
-
-                    <hr />
-
-                    <h1>Pagerank Filter</h1>
-                    <div id="pagerankFilter">
-                        <div>
-                            <span> Min: </span>
-                            <span id="minPagerank"> 0 </span>
-                            <br />
-                            <span> Max: </span>
-                            <span id="maxPagerank"> 32 </span>
-                        </div>
-
-                        <div>
-                            <span>0</span>
-                            <input
-                                type="range"
-                                name="pagerankSliderMin"
-                                id="sliderMin"
-                                value="0"
-                                min="0"
-                                max="32"
-                            />
-                            <span>32</span>
-
-                            <br />
-
-                            <span>0</span>
-                            <input
-                                type="range"
-                                name="pagerankSliderMax"
-                                id="sliderMax"
-                                value="32"
-                                min="0"
-                                max="32"
-                            />
-                            <span>32</span>
-                        </div>
-                    </div>
-
-                    <div style="padding-top: 20px; text-align: left">
-                        <input
-                            type="radio"
-                            name="rbLinks"
-                            id="incoming"
-                            value="incoming"
-                            onchange="processPageRankData(sliderMin.value, sliderMax.value)"
-                        />
-                        Incoming
-                        <input
-                            type="radio"
-                            name="rbLinks"
-                            id="outgoing"
-                            value="outgoing"
-                            onchange="processPageRankData(sliderMin.value, sliderMax.value)"
-                        />
-                        Outgoing
-                        <span style="padding-left: 30px"> links shown</span>
-                    </div>
-                </aside>
+        <div class="mainContent">
+                <div id="legend">
+                    <input
+                        type="checkbox"
+                        id="cbShort"
+                        onclick="updateVisualization();"
+                    />
+        
+                    Short Games (0-60min) <br />
+        
+                    <input
+                        type="checkbox"
+                        id="cbMedium"
+                        onclick="updateVisualization();"
+                    />
+        
+                    Medium Games (61-90min) <br />
+        
+                    <input
+                        type="checkbox"
+                        id="cbLong"
+                        onclick="updateVisualization();"
+                    />
+                    Long Games (>90min)
+                </div>
+        
+                <div id="zoomButtons">
+                    Zoom:
+                    <input
+                        type="text"
+                        id="zoomText"
+                        name="zoomText"
+                        value="0/8"
+                        readonly
+                    />
+                    <button id="zoom+" onclick="updateScale(1)">+</button>
+                    <button id="zoom-" onclick="updateScale(-1)">-</button>
+                </div>
+    
+                <!-- Canvas for first vis -->
+                <div id="General" class="tabcontent">
+                    <div id="canvas"></div>
+                </div>
+        
+                <!-- Canvas for second vis -->
+                <div id="Details" class="tabcontent" style="display: none">
+                    <div id="canvas2"></div>
+                </div>
+        
+                <!-- Canvas for LDA -->
+                <div id="Details2" class="tabcontent" style="display: none">
+                    <div id="canvas3"></div>
+                </div>
+                <!-- Canvas for Clustering -->
+                <div id="Details3" class="tabcontent" style="display: none">
+                    <div id="canvas4"></div>
+                </div>
+    
+                <!-- Canvas for Pagerank -->
+                <div
+                    id="PageRankTab"
+                    class="tabcontent"
+                    style="display: none; overflow: auto"
+                >
+                    <div id="canvas6">
+                        <div id="loading">Loading...</div>
+        
+                        <aside style="padding-top: 0">
+                            <div id="pagerankLegend" style="padding-bottom: 20px">
+                                <h1>Legend</h1>
+                                <img id="greenCircleImg" src="greenCircle.png" alt="" />
+                                <span>Boardgame (hover to display pagerank)</span>
+                                <img id="lineImg" src="line.png" alt="" />
+                                <span>Recommendation </span>
+                            </div>
+        
+                            <hr />
+        
+                            <h1>Pagerank Filter</h1>
+                            <div id="pagerankFilter">
+                                <div>
+                                    <span> Min: </span>
+                                    <span id="minPagerank"> 0 </span>
+                                    <br />
+                                    <span> Max: </span>
+                                    <span id="maxPagerank"> 32 </span>
+                                </div>
+        
+                                <div>
+                                    <span>0</span>
+                                    <input
+                                        type="range"
+                                        name="pagerankSliderMin"
+                                        id="sliderMin"
+                                        value="0"
+                                        min="0"
+                                        max="32"
+                                    />
+                                    <span>32</span>
+        
+                                    <br />
+        
+                                    <span>0</span>
+                                    <input
+                                        type="range"
+                                        name="pagerankSliderMax"
+                                        id="sliderMax"
+                                        value="32"
+                                        min="0"
+                                        max="32"
+                                    />
+                                    <span>32</span>
+                                </div>
+                            </div>
+        
+                            <div style="padding-top: 20px; text-align: left">
+                                <input
+                                    type="radio"
+                                    name="rbLinks"
+                                    id="incoming"
+                                    value="incoming"
+                                    onchange="processPageRankData(sliderMin.value, sliderMax.value)"
+                                />
+                                Incoming
+                                <input
+                                    type="radio"
+                                    name="rbLinks"
+                                    id="outgoing"
+                                    value="outgoing"
+                                    onchange="processPageRankData(sliderMin.value, sliderMax.value)"
+                                />
+                                Outgoing
+                                <span style="padding-left: 30px"> links shown</span>
+                            </div>
+                        </aside>
+                </div>
             </div>
+
         </div>
+    </div>
+
+        
 
         <script>
             // EventListener hinzufügen
@@ -216,7 +232,8 @@
                     // Testelement verschieben, indem Inline-Styles eingefügt werden
                     document.getElementById('minPagerank').innerHTML =
                         this.value;
-                    processPageRankData(this.value, sliderMax.value);
+                        createFilter(this.value, sliderMax.value);
+                        processPageRankData(sliderMin.value, this.value);
                 });
 
                 // EventListener für das Verändern des SlidersMax hinzufügen
@@ -233,6 +250,7 @@
                     // Testelement verschieben, indem Inline-Styles eingefügt werden
                     document.getElementById('maxPagerank').innerHTML =
                         this.value;
+                    createFilter(sliderMin.value, this.value);
                     processPageRankData(sliderMin.value, this.value);
                 });
             });
@@ -261,7 +279,6 @@
         <script src="index.js"></script>
         <!-- kmeans -->
         <script src="kmeans.js"></script>
-
         <!-- draw vis -->
         <script src="app.js"></script>
     </body>
