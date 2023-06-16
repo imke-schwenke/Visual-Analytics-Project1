@@ -56,6 +56,37 @@ function drawPageRankVis(graphObject) {
             '* Actual calculated pagerank has been multiplied with 1000 for readability purposes.'
         );
 
+    // arrowhead
+    markerBoxWidth = 10;
+    markerBoxHeight = 10;
+    refX = markerBoxWidth / 2;
+    refY = markerBoxHeight / 2;
+
+    markerWidth = markerBoxWidth / 2;
+    markerHeight = markerBoxHeight / 2;
+
+    arrowPoints = [
+        [0, 0],
+        [0, 10],
+        [10, 5],
+    ];
+
+    // arrowhead
+    marker = svg
+        .append('defs')
+        .append('marker')
+        .attr('id', 'arrow')
+        .attr('viewBox', [0, 0, markerBoxWidth, markerBoxHeight])
+        .attr('refX', refX)
+        .attr('refY', refY)
+        .attr('markerWidth', markerWidth)
+        .attr('markerHeight', markerBoxHeight)
+        .attr('orient', 'auto-start-reverse')
+        .append('path')
+        .attr('d', d3.line()(arrowPoints))
+        .attr('stroke', 'red')
+        .attr('fill', 'red');
+
     // Initialize the links
     const link = svg
         .selectAll('line')
@@ -63,6 +94,7 @@ function drawPageRankVis(graphObject) {
         .join('line')
         .style('stroke', '#aaa')
         .style('stroke-width', 1)
+
         .style('opacity', function (d) {
             if (d.filter) {
                 return '10%';
@@ -75,8 +107,9 @@ function drawPageRankVis(graphObject) {
             if (i.filter) {
                 return;
             }
+            raise(this);
 
-            // console.log(i);
+            d3.select(this).style('marker-end', 'url(#arrow)');
 
             d3.select(this).style('stroke-width', 3);
             d3.select(this).style('stroke', 'red');
@@ -96,6 +129,10 @@ function drawPageRankVis(graphObject) {
             if (i.filter) {
                 return;
             }
+
+            d3.select(this).style('marker-end', 'none');
+            node.dispatch('raiseNode');
+
             d3.select(this).style('stroke-width', 1);
             d3.select(this).style('stroke', '#aaa');
 
@@ -147,6 +184,9 @@ function drawPageRankVis(graphObject) {
             d3.select(this).style('fill', '#69b3a2');
 
             tooltip.style('visibility', 'hidden');
+        })
+        .on('raiseNode', function () {
+            raise(this);
         })
         .style('opacity', function (d) {
             if (d.filter) {
