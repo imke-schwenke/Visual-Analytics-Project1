@@ -67,6 +67,12 @@
                     >
                         Pagerank
                     </button>
+                    <button
+                        class="tablinks"
+                        onclick="changeInfo(event, 'GraphVisTab')"
+                    >
+                        Graph Analysis
+                    </button>
                 </div>
             </div>
 
@@ -141,6 +147,12 @@
                 <!-- Canvas for Clustering -->
                 <div id="Details3" class="tabcontent" style="display: none">
                     <div id="canvas4"></div>
+                </div>
+
+                <div id="GraphVisTab" class="tabcontent" style="display: none">
+                    <div id="testCanvas">
+                        <div id="loadingGraphVis">Loading...</div>
+                    </div>
                 </div>
 
                 <!-- Canvas for Pagerank -->
@@ -229,6 +241,7 @@
                         </aside>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -291,9 +304,8 @@
 
         <script src="https://d3js.org/d3.v7.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-
+        <script src="graphanalysis.js" defer></script>  
         <script src="pagerank.js" defer></script>
-
         <!--<script src="LDA.js"></script>-->
         <script src="index.js"></script>
         <!-- kmeans -->
