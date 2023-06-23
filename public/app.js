@@ -898,6 +898,8 @@ function changeInfo(evt, info) {
         // document.getElementById('zoomButtons').style.visibility = 'hidden';
 
         //updateVisualization(6);
+    } else if (info == 'GraphVisTab') {
+        document.getElementById('legend').style.visibility = 'hidden';
     } else {
         document.getElementById('cbShort').checked = true;
         document.getElementById('cbMedium').checked = true;
@@ -1028,6 +1030,7 @@ function readDataByPagerank(boardgamesRanked) {
         drawSecondVis(filtered_data);
         LDA(filtered_data);
         drawClusterVis(filtered_data);
+        drawGraphAnalysisVis(filtered_data);
     });
 }
 
